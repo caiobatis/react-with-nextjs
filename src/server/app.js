@@ -5,15 +5,17 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import config from './config'
 import logger from './lib/logger'
+import next from 'next'
 
 const app = express()
+const dev = config.env.match(/development|test/) !== 'production';
 
 app.use(morgan('tiny'))
 app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-if (config.env.match(/development|test/)) {
+if (dev) {
   const webpack = require('webpack')
   const webpackDevMiddleware = require('webpack-dev-middleware')
   const webpackHotMiddleware = require('webpack-hot-middleware')
@@ -31,7 +33,8 @@ if (config.env.match(/development|test/)) {
       chunkModules: false,
       modules: false
     }
-  })
+	})
+	// const middleware = webpackDevMiddleware()
 
   app.use(middleware)
   app.use(webpackHotMiddleware(compiler, {
@@ -40,23 +43,24 @@ if (config.env.match(/development|test/)) {
   }))
   app.use(express.static(config.paths.public))
 
-  app.get('/*', (req, res) => {
-    res.set('content-type', 'text/html')
+  // app.get('/*', (req, res) => {
+  //   res.set('content-type', 'text/html')
 
-    try {
-      res.write(middleware.fileSystem.readFileSync(`${config.paths.dist}/index.html`))
-    } catch (err) {
-      logger.error(err)
-    }
+  //   try {
+  //     res.write(middleware.fileSystem.readFileSync(`${config.paths.dist}/index.html`))
+  //   } catch (err) {
+  //     logger.error(err)
+  //   }
 
-    res.end()
-  })
-} else {
-  app.use(express.static(`${config.paths.dist}`))
-
-  app.get('/*', (req, res) => {
-    res.sendFile(`${config.paths.dist}/index.html`)
-  })
+  //   res.end()
+  // })
 }
+// else {
+//   app.use(express.static(`${config.paths.dist}`))
+
+//   app.get('/*', (req, res) => {
+//     res.sendFile(`${config.paths.dist}/index.html`)
+//   })
+// }
 
 export default app
