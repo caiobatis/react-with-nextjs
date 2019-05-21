@@ -1,0 +1,20 @@
+@import "_vars.scss";
+
+.page-section {
+  padding: 20px;
+  background: #ccc;
+}
+.about {
+  padding: 20px;
+  background: #ccc;
+}
+
+nav {
+  padding: 10px;
+
+  a {
+    padding: 10px;
+    text-decoration: none;
+    color: $green;
+  }
+}

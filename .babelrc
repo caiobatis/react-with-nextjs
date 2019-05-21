@@ -1,9 +1,28 @@
 {
   "presets": [
     "@babel/preset-env",
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "next/babel"
   ],
-  "plugins": ["@babel/plugin-proposal-class-properties"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "styles": "scss/"
+        },
+        "cwd": "babelrc"
+      }
+    ],
+    [
+      "wrap-in-js",
+      {
+        "extensions": ["css$", "scss$"]
+      }
+    ],
+    ["@babel/plugin-proposal-class-properties"],
+  ],  
   "sourceMaps": true,
   "retainLines": true,
   "env": {
